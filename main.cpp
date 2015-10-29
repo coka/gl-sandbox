@@ -10,22 +10,37 @@ static const GLfloat clear_color[] = { 0.169f, 0.236f, 0.313f, 1.0f };
 static GLuint program;
 static const char * vs_source[] =
 {
-	"#version 330 core				\n"
-	"						\n"
-	"void main(void)				\n"
-	"{						\n"
-	"	gl_Position = vec4(0.0, 0.0, 0.0, 1.0);	\n"
-	"}						\n"
+	"#version 330 core					\n"
+	"							\n"
+	"out vec4 vertex_color;					\n"
+	"							\n"
+	"const vec4 vertices[] = vec4[](			\n"
+	"	vec4(0.0, 0.5, 0.0, 1.0),			\n"
+	"	vec4(-0.5, -0.5, 0.0, 1.0),			\n"
+	"	vec4(0.5, -0.5, 0.0, 1.0));			\n"
+	"							\n"
+	"const vec4 colors[] = vec4[](				\n"
+	"	vec4(1.0, 0.0, 0.0, 1.0),			\n"
+	"	vec4(0.0, 1.0, 0.0, 1.0),			\n"
+	"	vec4(0.0, 0.0, 1.0, 1.0));			\n"
+	"							\n"
+	"void main(void)					\n"
+	"{							\n"
+	"	gl_Position = vertices[gl_VertexID];		\n"
+	"	vertex_color = colors[gl_VertexID];		\n"
+	"}							\n"
 };
 static const char * fs_source[] =
 {
 	"#version 330 core				\n"
 	"						\n"
+	"in vec4 vertex_color;				\n"
+	"						\n"
 	"out vec4 color;				\n"
 	"						\n"
 	"void main(void)				\n"
 	"{						\n"
-	"	color = vec4(1.0, 1.0, 1.0, 1.0);	\n"
+	"	color = vertex_color;			\n"
 	"}						\n"
 };
 
@@ -74,7 +89,7 @@ static void setup(void)
 static void render(void)
 {
 	glClearBufferfv(GL_COLOR, 0, clear_color);
-	glDrawArrays(GL_POINTS, 0, 1);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 static void init_shader_prog(void)
